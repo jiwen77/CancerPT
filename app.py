@@ -22,8 +22,8 @@ from sample_data import (
 
 # Page configuration
 st.set_page_config(
-    page_title="Head and Neck Cancer Survival Prediction Tool",
-    page_icon="🏥",
+    page_title="Nasopharyngeal Carcinoma Survival Prediction Tool",
+    page_icon="🧬",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -37,9 +37,9 @@ model, model_columns = load_model()
 
 # App title and description
 def render_header():
-    st.title("Head and Neck Cancer Survival Prediction Tool")
+    st.title("Nasopharyngeal Carcinoma Survival Prediction Tool")
     st.markdown(
-        "This tool predicts survival rates for head and neck cancer patients. Please enter patient information, tumor characteristics, and treatment details to see the prediction results."
+        "This tool predicts survival rates for nasopharyngeal carcinoma patients. Please enter patient information, tumor characteristics, and treatment details to see the prediction results."
     )
     st.markdown(
         "**Note:** This tool is for research purposes only and should not replace professional medical advice, diagnosis, or treatment. The prediction model is based on simulated data and should be replaced with a real clinical data-based model before use in actual research settings."
@@ -80,11 +80,8 @@ def render_patient_input(tab):
         # Tumor characteristics
         with col2:
             st.subheader("Tumor Characteristics")
-            site_options = [
-                "Lip", "Tongue", "Salivary Gland", "Floor of Mouth", "Gum and Other Mouth", 
-                "Nasopharynx", "Tonsil", "Oropharynx", "Hypopharynx", "Other Oral Cavity and Pharynx"
-            ]
-            site_index = site_options.index(loaded_data.get('primary_site', 'Lip')) if loaded_data.get('primary_site') in site_options else 0
+            site_options = ["Nasopharyngeal Carcinoma"]
+            site_index = site_options.index(loaded_data.get('primary_site', 'Nasopharyngeal Carcinoma')) if loaded_data.get('primary_site') in site_options else 0
             primary_site = st.selectbox("Primary Site:", site_options, index=site_index)
             
             histology_options = ["Squamous Cell Carcinoma", "Adenocarcinoma", "Other"]
@@ -115,13 +112,13 @@ def render_patient_input(tab):
             n_index = n_options.index(loaded_data.get('n_stage', 'N0')) if loaded_data.get('n_stage') in n_options else 0
             n_stage = st.selectbox("N Stage:", n_options, index=n_index)
             
-            m_options = ["M0", "M1", "MX"]
+            m_options = ["M0", "M1a", "M1b", "MX"]
             m_index = m_options.index(loaded_data.get('m_stage', 'M0')) if loaded_data.get('m_stage') in m_options else 0
             m_stage = st.selectbox("M Stage:", m_options, index=m_index)
             
-            ajcc_options = ["Stage I", "Stage II", "Stage III", "Stage IVA", "Stage IVB", "Stage IVC"]
-            ajcc_index = ajcc_options.index(loaded_data.get('ajcc_stage', 'Stage I')) if loaded_data.get('ajcc_stage') in ajcc_options else 0
-            ajcc_stage = st.selectbox("AJCC Stage:", ajcc_options, index=ajcc_index)
+            ajcc_options = ["Stage IA", "Stage IB", "Stage II", "Stage III", "Stage IVA", "Stage IVB"]
+            ajcc_index = ajcc_options.index(loaded_data.get('ajcc_stage', 'Stage IA')) if loaded_data.get('ajcc_stage') in ajcc_options else 0
+            ajcc_stage = st.selectbox("AJCC Stage (TNM-9):", ajcc_options, index=ajcc_index)
         
         # Treatment information
         with col4:
@@ -624,7 +621,7 @@ def render_risk_factors(tab):
         baseline_patient = {
             'age': 60,
             'sex': 'Male',
-            'primary_site': 'Tongue',
+            'primary_site': 'Nasopharyngeal Carcinoma',
             'histology': 'Squamous Cell Carcinoma',
             'grade': 'Moderately differentiated',
             't_stage': 'T2',
@@ -803,7 +800,7 @@ def render_risk_factors(tab):
                     options = ["N0", "N1", "N2", "N3"]
                     field = "n_stage"
                 elif risk_factor == "M Stage":
-                    options = ["M0", "M1"]
+                    options = ["M0", "M1a", "M1b"]
                     field = "m_stage"
                 elif risk_factor == "Comorbidities":
                     options = ["None", "Mild", "Moderate", "Severe"]
@@ -955,7 +952,7 @@ def render_about(tab):
     with tab:
         st.header("About This Application")
         
-        st.markdown("This web application provides survival prediction for head and neck cancer patients based on patient characteristics, tumor properties, and treatment information.")
+        st.markdown("This web application provides survival prediction for nasopharyngeal carcinoma patients based on patient characteristics, tumor properties, and treatment information.")
         
         st.markdown("The application uses a Cox proportional hazards model trained on simulated data to generate survival probability estimates over time.")
         

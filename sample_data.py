@@ -1,5 +1,5 @@
 """
-This file contains simulated data for the head and neck cancer survival prediction app
+This file contains simulated data for the nasopharyngeal carcinoma survival prediction app
 In a real-world scenario, this would be replaced with actual patient data
 """
 
@@ -17,7 +17,7 @@ import plotly.graph_objects as go
 np.random.seed(123)
 
 def generate_sample_data(n=500):
-    """Generate simulated patient data for head and neck cancer"""
+    """Generate simulated patient data for nasopharyngeal carcinoma"""
     
     # Demographics
     age = np.round(np.random.normal(62, 10, n))
@@ -30,11 +30,8 @@ def generate_sample_data(n=500):
         ["Single", "Married", "Divorced", "Separated", "Widowed", "Unknown"], n
     )
     
-    # Tumor characteristics
-    primary_site = np.random.choice([
-        "Lip", "Tongue", "Salivary Gland", "Floor of Mouth", "Gum and Other Mouth",
-        "Nasopharynx", "Tonsil", "Oropharynx", "Hypopharynx", "Other Oral Cavity and Pharynx"
-    ], n)
+    # Tumor characteristics - only Nasopharyngeal Carcinoma
+    primary_site = np.full(n, "Nasopharyngeal Carcinoma")
     
     histology = np.random.choice(
         ["Squamous Cell Carcinoma", "Adenocarcinoma", "Other"], n, p=[0.85, 0.1, 0.05]
@@ -56,10 +53,10 @@ def generate_sample_data(n=500):
         ["N0", "N1", "N2", "N3", "NX"], n, p=[0.4, 0.25, 0.2, 0.1, 0.05]
     )
     
-    m_stage = np.random.choice(["M0", "M1", "MX"], n, p=[0.8, 0.15, 0.05])
+    m_stage = np.random.choice(["M0", "M1a", "M1b", "MX"], n, p=[0.8, 0.1, 0.05, 0.05])
     
     ajcc_stage = np.random.choice(
-        ["Stage I", "Stage II", "Stage III", "Stage IVA", "Stage IVB", "Stage IVC"], n
+        ["Stage IA", "Stage IB", "Stage II", "Stage III", "Stage IVA", "Stage IVB"], n
     )
     
     # Treatment
@@ -94,11 +91,10 @@ def generate_sample_data(n=500):
         'comorbidities': comorbidities
     })
     
-    # Calculate risk score for each patient based on their features (fictional model)
+    # Calculate risk score for each patient based on their features (fictional model for Nasopharyngeal carcinoma)
     risk_score = (
         0.02 * (data['age'] - 60) +
-        0.3 * (data['sex'] == "Male") +
-        0.2 * (data['primary_site'].isin(["Hypopharynx", "Other Oral Cavity and Pharynx"])) +
+        0.2 * (data['sex'] == "Male") +  # Reduced impact for nasopharyngeal carcinoma
         0.4 * (data['histology'] == "Other") +
         0.25 * (data['grade'] == "Poorly differentiated") +
         0.4 * (data['grade'] == "Undifferentiated") +
@@ -108,10 +104,11 @@ def generate_sample_data(n=500):
         0.5 * (data['n_stage'] == "N1") +
         0.8 * (data['n_stage'] == "N2") +
         1.2 * (data['n_stage'] == "N3") +
-        1.5 * (data['m_stage'] == "M1") +
-        -0.5 * (data['surgery'] == "Yes") +
-        -0.3 * (data['radiation'] == "Yes") +
-        -0.2 * (data['chemotherapy'] == "Yes") +
+        1.2 * (data['m_stage'] == "M1a") +
+        1.8 * (data['m_stage'] == "M1b") +
+        -0.3 * (data['surgery'] == "Yes") +  # Surgery less common for nasopharyngeal carcinoma
+        -0.5 * (data['radiation'] == "Yes") +  # Radiation more important for nasopharyngeal carcinoma
+        -0.3 * (data['chemotherapy'] == "Yes") +  # Chemotherapy more important
         -0.1 * (data['immunotherapy'] == "Yes") +
         0.2 * (data['comorbidities'] == "Moderate") +
         0.4 * (data['comorbidities'] == "Severe")
@@ -426,7 +423,7 @@ def generate_report_html(patient_data, prediction_df, var_importance):
     html = f"""
     <html>
     <head>
-        <title>Head and Neck Cancer Survival Prediction Report</title>
+        <title>Nasopharyngeal Carcinoma Survival Prediction Report</title>
         <style>
             body {{ font-family: Arial, sans-serif; margin: 40px; }}
             h1 {{ color: #2C3E50; }}
@@ -439,7 +436,7 @@ def generate_report_html(patient_data, prediction_df, var_importance):
         </style>
     </head>
     <body>
-        <h1>Head and Neck Cancer Survival Prediction Report</h1>
+        <h1>Nasopharyngeal Carcinoma Survival Prediction Report</h1>
         <p>Generated on: {pd.Timestamp.now().strftime('%Y-%m-%d %H:%M')}</p>
         
         <h2>Patient Information</h2>
@@ -561,7 +558,7 @@ if __name__ == "__main__":
     patient = {
         'age': 60,
         'sex': 'Male',
-        'primary_site': 'Tongue',
+        'primary_site': 'Nasopharyngeal Carcinoma',
         'histology': 'Squamous Cell Carcinoma',
         'grade': 'Moderately differentiated',
         't_stage': 'T2',
